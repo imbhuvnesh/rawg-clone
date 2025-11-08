@@ -26,6 +26,22 @@ const useInfiniteGames = (gameQuery: GameQuery) => {
 		setPage(1);
 		setHasMore(true);
 
+		// Build dates filter
+		const datesFilter =
+			gameQuery.startYear && gameQuery.endYear
+				? `${gameQuery.startYear}-01-01,${gameQuery.endYear}-12-31`
+				: gameQuery.startYear
+				? `${gameQuery.startYear}-01-01,${new Date().getFullYear() + 2}-12-31`
+				: gameQuery.endYear
+				? `1980-01-01,${gameQuery.endYear}-12-31`
+				: undefined;
+
+		// Build metacritic filter (RAWG API uses 0-100 scale, we use 0-5, so multiply by 20)
+		const metacriticFilter =
+			gameQuery.minRating || gameQuery.maxRating
+				? `${Math.round(gameQuery.minRating * 20)},${Math.round(gameQuery.maxRating * 20)}`
+				: undefined;
+
 		const requestConfig: AxiosRequestConfig = {
 			signal: controller.signal,
 			params: {
@@ -33,6 +49,8 @@ const useInfiniteGames = (gameQuery: GameQuery) => {
 				platforms: gameQuery.platform?.id,
 				ordering: gameQuery.sortOrder,
 				search: gameQuery.searchText,
+				dates: datesFilter,
+				metacritic: metacriticFilter,
 				page: 1,
 				page_size: 20,
 			},
@@ -52,7 +70,16 @@ const useInfiniteGames = (gameQuery: GameQuery) => {
 			});
 
 		return () => controller.abort();
-	}, [gameQuery.genre?.id, gameQuery.platform?.id, gameQuery.sortOrder, gameQuery.searchText]);
+	}, [
+		gameQuery.genre?.id,
+		gameQuery.platform?.id,
+		gameQuery.sortOrder,
+		gameQuery.searchText,
+		gameQuery.minRating,
+		gameQuery.maxRating,
+		gameQuery.startYear,
+		gameQuery.endYear,
+	]);
 
 	const fetchMore = () => {
 		if (isFetchingMore || !hasMore) return;
@@ -60,12 +87,30 @@ const useInfiniteGames = (gameQuery: GameQuery) => {
 		setIsFetchingMore(true);
 		const nextPage = page + 1;
 
+		// Build dates filter
+		const datesFilter =
+			gameQuery.startYear && gameQuery.endYear
+				? `${gameQuery.startYear}-01-01,${gameQuery.endYear}-12-31`
+				: gameQuery.startYear
+				? `${gameQuery.startYear}-01-01,${new Date().getFullYear() + 2}-12-31`
+				: gameQuery.endYear
+				? `1980-01-01,${gameQuery.endYear}-12-31`
+				: undefined;
+
+		// Build metacritic filter
+		const metacriticFilter =
+			gameQuery.minRating || gameQuery.maxRating
+				? `${Math.round(gameQuery.minRating * 20)},${Math.round(gameQuery.maxRating * 20)}`
+				: undefined;
+
 		const requestConfig: AxiosRequestConfig = {
 			params: {
 				genres: gameQuery.genre?.id,
 				platforms: gameQuery.platform?.id,
 				ordering: gameQuery.sortOrder,
 				search: gameQuery.searchText,
+				dates: datesFilter,
+				metacritic: metacriticFilter,
 				page: nextPage,
 				page_size: 20,
 			},

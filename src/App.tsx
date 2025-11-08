@@ -13,6 +13,10 @@ export interface GameQuery {
 	platform: Platform | null;
 	sortOrder: string;
 	searchText: string;
+	minRating: number;
+	maxRating: number;
+	startYear: string;
+	endYear: string;
 }
 
 function App() {
@@ -39,6 +43,17 @@ function App() {
 								gameQuery={gameQuery}
 								onSelectPlatform={(platform) => setGameQuery({ ...gameQuery, platform })}
 								onSelectSortOrder={(sortOrder) => setGameQuery({ ...gameQuery, sortOrder })}
+								onRatingChange={(min, max) => setGameQuery({ ...gameQuery, minRating: min, maxRating: max })}
+								onDateChange={(startYear, endYear) => setGameQuery({ ...gameQuery, startYear, endYear })}
+								onClearFilters={() =>
+									setGameQuery({
+										...gameQuery,
+										minRating: 0,
+										maxRating: 5,
+										startYear: "",
+										endYear: "",
+									})
+								}
 							/>
 						}
 					/>
