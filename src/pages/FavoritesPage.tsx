@@ -2,21 +2,27 @@ import { Box, Heading, SimpleGrid, Text, Container, Button, VStack } from "@chak
 import { Link } from "react-router-dom";
 import { useFavoritesContext } from "../contexts/FavoritesContext";
 import { FavoriteGameCard } from "../components/FavoriteGameCard";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 const FavoritesPage = () => {
 	const { favorites } = useFavoritesContext();
 
+	const breadcrumbItems = [{ label: "Home", path: "/" }, { label: "Favorites" }];
+
 	if (favorites.length === 0) {
 		return (
 			<Container maxW="container.xl" padding={10}>
-				<VStack spacing={6}>
-					<Heading size="xl">Your Favorites</Heading>
-					<Text color="gray.500" fontSize="lg">
-						You haven't added any games to your favorites yet.
-					</Text>
-					<Button as={Link} to="/" colorScheme="blue" size="lg">
-						Browse Games
-					</Button>
+				<VStack spacing={6} align="stretch">
+					<Breadcrumbs items={breadcrumbItems} />
+					<VStack spacing={6}>
+						<Heading size="xl">Your Favorites</Heading>
+						<Text color="gray.500" fontSize="lg">
+							You haven't added any games to your favorites yet.
+						</Text>
+						<Button as={Link} to="/" colorScheme="blue" size="lg">
+							Browse Games
+						</Button>
+					</VStack>
 				</VStack>
 			</Container>
 		);
@@ -24,6 +30,9 @@ const FavoritesPage = () => {
 
 	return (
 		<Box padding={5}>
+			<Box paddingLeft={2} marginBottom={3}>
+				<Breadcrumbs items={breadcrumbItems} />
+			</Box>
 			<Heading as="h1" marginY={5} fontSize="4xl" paddingLeft={2}>
 				Your Favorites ({favorites.length})
 			</Heading>

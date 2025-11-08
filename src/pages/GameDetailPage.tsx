@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import {
 	Box,
 	Heading,
@@ -12,15 +12,19 @@ import {
 	GridItem,
 	Grid,
 	Container,
+	Button,
 } from "@chakra-ui/react";
+import { FaArrowLeft } from "react-icons/fa";
 import useGameDetails from "../hooks/useGameDetails";
 import useGameScreenshots from "../hooks/useGameScreenshots";
 import getCroppedImgUrl from "../services/image-url";
 import { PlatformIconsList } from "../components/PlatformIconsList";
 import { CriticScore } from "../components/CriticScore";
+import Breadcrumbs from "../components/Breadcrumbs";
 
 const GameDetailPage = () => {
 	const { id } = useParams();
+	const navigate = useNavigate();
 	const { data: game, error, isLoading } = useGameDetails(id || "");
 	const { data: screenshots } = useGameScreenshots(id || "");
 
@@ -48,9 +52,28 @@ const GameDetailPage = () => {
 		);
 	}
 
+	const breadcrumbItems = [
+		{ label: "Home", path: "/" },
+		{ label: "Games", path: "/" },
+		{ label: game.name },
+	];
+
 	return (
 		<Container maxW="container.xl" padding={5}>
 			<VStack spacing={6} align="stretch">
+				{/* Back Button and Breadcrumbs */}
+				<Box>
+					<Button
+						leftIcon={<FaArrowLeft />}
+						variant="ghost"
+						onClick={() => navigate(-1)}
+						marginBottom={3}
+						size="sm">
+						Back
+					</Button>
+					<Breadcrumbs items={breadcrumbItems} />
+				</Box>
+
 				{/* Header Section */}
 				<Box>
 					<Heading as="h1" size="2xl" marginBottom={4}>
