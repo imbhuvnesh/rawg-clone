@@ -2,6 +2,7 @@ import React from "react";
 import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import ReactDOM from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
+import { FavoritesProvider } from "./contexts/FavoritesContext.tsx";
 import App from "./App.tsx";
 import theme from "./theme.ts";
 import "./index.css";
@@ -10,9 +11,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
 	<React.StrictMode>
 		<ChakraProvider theme={theme}>
 			<ColorModeScript initialColorMode={theme.config.initialColorMode} />
-			<BrowserRouter>
-				<App />
-			</BrowserRouter>
+			<FavoritesProvider>
+				<BrowserRouter>
+					<App />
+				</BrowserRouter>
+			</FavoritesProvider>
 		</ChakraProvider>
 	</React.StrictMode>
 );

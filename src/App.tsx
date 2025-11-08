@@ -5,6 +5,7 @@ import { Platform } from "./hooks/useGames";
 import Layout from "./components/Layout";
 import HomePage from "./pages/HomePage";
 import GameDetailPage from "./pages/GameDetailPage";
+import FavoritesPage from "./pages/FavoritesPage";
 
 export interface GameQuery {
 	genre: Genre | null;
@@ -38,6 +39,9 @@ function App() {
 						/>
 					}
 				/>
+			</Route>
+			<Route path="/favorites" element={<Layout showSidebar={false} />}>
+				<Route index element={<FavoritesPage />} />
 			</Route>
 			<Route path="/games/:id" element={<Layout showSidebar={false} />}>
 				<Route index element={<GameDetailPage />} />
