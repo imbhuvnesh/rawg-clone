@@ -21,6 +21,7 @@ import getCroppedImgUrl from "../services/image-url";
 import { PlatformIconsList } from "../components/PlatformIconsList";
 import { CriticScore } from "../components/CriticScore";
 import Breadcrumbs from "../components/Breadcrumbs";
+import SimilarGames from "../components/SimilarGames";
 
 const GameDetailPage = () => {
 	const { id } = useParams();
@@ -223,6 +224,9 @@ const GameDetailPage = () => {
 						</VStack>
 					</GridItem>
 				</Grid>
+
+				{/* Similar Games Section */}
+				<SimilarGames gameId={id} />
 			</VStack>
 		</Container>
 	);
