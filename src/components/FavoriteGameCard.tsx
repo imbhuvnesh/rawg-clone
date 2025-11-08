@@ -1,19 +1,16 @@
-import { Game } from "../hooks/useGames";
-import { Card, CardBody, HStack, Heading, Image, IconButton, Box } from "@chakra-ui/react";
+import { Card, CardBody, Heading, Image, IconButton, Box, HStack, Badge } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-import { PlatformIconsList } from "./PlatformIconsList";
-import { CriticScore } from "./CriticScore";
+import { FaHeart } from "react-icons/fa";
 import getCroppedImgUrl from "../services/image-url";
 import { useFavoritesContext } from "../contexts/FavoritesContext";
+import { FavoriteGame } from "../services/favorites-storage";
 
 interface Props {
-	game: Game;
+	game: FavoriteGame;
 }
 
-export const GameCard = ({ game }: Props) => {
-	const { isFavorite, toggleFavorite } = useFavoritesContext();
-	const favorited = isFavorite(game.id);
+export const FavoriteGameCard = ({ game }: Props) => {
+	const { toggleFavorite } = useFavoritesContext();
 
 	const handleFavoriteClick = (e: React.MouseEvent) => {
 		e.preventDefault();
@@ -37,10 +34,10 @@ export const GameCard = ({ game }: Props) => {
 			<Image src={getCroppedImgUrl(game.background_image)} />
 			<Box position="absolute" top={2} right={2}>
 				<IconButton
-					aria-label={favorited ? "Remove from favorites" : "Add to favorites"}
-					icon={favorited ? <FaHeart /> : <FaRegHeart />}
+					aria-label="Remove from favorites"
+					icon={<FaHeart />}
 					onClick={handleFavoriteClick}
-					colorScheme={favorited ? "red" : "gray"}
+					colorScheme="red"
 					variant="solid"
 					size="sm"
 					borderRadius="full"
@@ -49,8 +46,12 @@ export const GameCard = ({ game }: Props) => {
 			</Box>
 			<CardBody>
 				<HStack justifyContent="space-between" marginBottom={3}>
-					<PlatformIconsList platforms={game.parent_platforms.map((p) => p.platform)} />
-					<CriticScore score={game.metacritic} />
+					<Box />
+					{game.metacritic && (
+						<Badge colorScheme={game.metacritic > 75 ? "green" : game.metacritic > 60 ? "yellow" : ""} fontSize="14px" paddingX={2}>
+							{game.metacritic}
+						</Badge>
+					)}
 				</HStack>
 				<Heading fontSize="2xl">{game.name}</Heading>
 			</CardBody>
